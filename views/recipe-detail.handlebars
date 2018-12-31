@@ -1,0 +1,13 @@
+<div>
+    {{#each recipe}}
+    <img src="{{this.previewUrl}}"/>
+    <div>
+        <h2>{{this.title}}</h2>
+        <p>Preparation Time: {{this.preparationTime}}</p>
+        <p>Cooking Time: {{this.cookingTime}}</p>
+        <p>Type: {{this.course}}</p>
+        <p>Vegetarian: {{this.vegetarian}}</p>
+        <p>{{this.instructions}}</p>
+    </div>
+    {{/each}}
+</div>
