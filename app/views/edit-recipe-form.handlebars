@@ -1,0 +1,32 @@
+<form action="edit-recipe?id={{recipe.[0].id}}&_method=PUT" method="POST">
+    <input type="hidden" name="_method" value="PUT">
+    Title : 
+    <input type="text" name="title" value="{{recipe.[0].title}}">
+    <br><br><br>
+    Link to image : 
+    <input type="text" name="previewUrl" value="{{recipe.[0].previewUrl}}">
+    <br><br><br>
+    Teaser : 
+    <input type="text" name="teaserText" value="{{recipe.[0].teaserText}}">
+    <br><br><br>
+    Course : 
+    <input type="text" name="course" value="{{recipe.[0].course}}">
+    <br><br><br>
+    Preparation time : 
+    <input type="text" name="preparationTime" value="{{recipe.[0].preparationTime}}">
+    <br><br><br>
+    Cooking Time : 
+    <input type="text" name="cookingTime" value="{{recipe.[0].cookingTime}}">
+    <br><br><br>
+    Instructions : 
+    <input type="text" name="instructions" value="{{recipe.[0].instructions}}">
+    <br><br><br>
+    Vegetarian : 
+    <input type="checkbox" name="vegetarian">
+    <br><br><br>
+    Mark as favourite ? 
+    <input type="checkbox" name="favourite">
+    <br><br><br>
+
+    <input type="submit" value="Edit Recipe">
+</form>
