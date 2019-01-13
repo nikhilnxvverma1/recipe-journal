@@ -1,13 +1,15 @@
-<a id='recipe-item' class='recipe-item' href="get-recipe?id={{this.id}}">
-    <div>
-        <img src="{{this.previewUrl}}"/>
-    </div>
-    <div>
-        <h3>{{this.title}}</h3>
-        <div class="recipe-button-bar">
-            <a><img src="../assets/edit.png"/></a>
-            <a href="favourite?id={{this.id}}"><img src="../assets/fav.png"/></a>
+<a id='recipe-item' href="get-recipe?id={{this.id}}">
+    <div class='recipe-item'>
+        <div>
+            <img src="{{this.previewUrl}}"/>
         </div>
-        <p>{{this.teaserText}}</p>
+        <div>
+            <h3>{{this.title}}</h3>
+            <div class="recipe-button-bar">
+                <a href="edit-recipe-details?id={{this.id}}"><img src="/assets/edit.png"/></a>
+                <a href="execute-favourite?id={{this.id}}&from=get-all-details"><img src="/assets/fav.png"/></a>
+            </div>
+            <p>{{this.teaserText}}</p>
+        </div>
     </div>
 </a>
