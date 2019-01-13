@@ -70,16 +70,24 @@ router.post('/api/v1/add-recipe', function (request, response) {
 
 //PUT request for editRecipe
 router.put('/api/v1/edit-recipe', function (request, response) {
+  var favourite = false;
+  var vegetarian = false;
+  if(request.body.favourite !== "undefined" && request.body.favourite === "on")
+    favourite = true;
+
+  if(request.body.vegetarian !== "undefined" && request.body.vegetarian === "on")
+    vegetarian = true;
+
   db.Recipe.update({
-    title: request.query.title,
-    teaserText: request.query.teaserText,
-    instructions: request.query.instructions,
-    cookingTime: request.query.cookingTime,
-    previewUrl: request.query.previewUrl,
-    favourite: request.query.favourite,
-    preparationTime: request.query.preparationTime,
-    course: request.query.course,
-    vegetarian: request.query.vegetarian
+    title: request.body.title,
+    teaserText: request.body.teaserText,
+    instructions: request.body.instructions,
+    cookingTime: request.body.cookingTime,
+    previewUrl: request.body.previewUrl,
+    favourite: favourite,
+    preparationTime: request.body.preparationTime,
+    course: request.body.course,
+    vegetarian: vegetarian
   }, 
   {
     where: {
@@ -87,7 +95,8 @@ router.put('/api/v1/edit-recipe', function (request, response) {
     }
   }
   ).then ((recipe)=> {
-    response.send(recipe);
+    // response.send(recipe);
+    response.redirect("get-all-recipe");
   });
 });
 
@@ -109,30 +118,70 @@ router.delete('/api/v1/delete-recipe', function (request, response) {
 
 //GET request for search
 router.get('/api/v1/search', function (request, response) {
+
+  var title = "";
+  var teaserText = "";
+  var favourite = false;
+  var vegetarian = false;
+
+  var obj = "{ [Op.or]: {";
+
+  if(request.query.title !== "undefined" && request.query.title !== "")
+    obj += "title : {[Op.like]:" + '%' + request.query.title + '%' + "}";
+
+  if(request.query.teaserText !== "undefined" && request.query.teaserText !== "") {
+    obj += ",";
+    obj += "teaserText: {[Op.like]:" + '%' + request.query.teaserText + '%' + "}";
+  }
+
+  if(request.query.cookingTime !== "undefined" && request.query.cookingTime !== "") {
+    obj += ",";
+    obj += "cookingTime: {[Op.lt]: " + request.query.cookingTime + "}";
+  }
+
+  if(request.query.favourite !== "undefined" && request.query.favourite === "on") {
+    obj += ",";
+    obj += "favourite: true";
+  }
+
+  if(request.query.preparationTime !== "undefined" && request.query.preparationTime !== "") {
+    obj += ",";
+    obj += "preparationTime: {[Op.lt]: " + request.query.preparationTime + "}";
+  }
+
+  if(request.query.course !== "undefined" && request.query.course !== "") {
+    obj += ",";
+    obj += "course: " + request.query.course;
+  }
+
+  if(request.query.vegetarian !== "undefined" && request.query.vegetarian === "on") {
+    obj += "vegetarian: true";
+  }
+
+  obj+="}";
+  
+  var jsonClause = JSON.parse(obj);
   db.Recipe.findAll({
     where: {
-      [Op.or]: [
-        {id: request.query.id},
-        {title: request.query.text},
-        {teaserText: request.query.text},
-        {instructions: request.query.text},
-        {cookingTime: request.query.cookingTime},
-        {previewUrl: request.query.previewUrl},
-        {favourite: request.query.favourite},
-        {preparationTime: request.query.preparationTime},
-        {course: request.query.course},
-        {vegetarian: request.query.vegetarian}
-      ]
+      jsonClause
     }
   }).then ((searchResults)=> {
-    response.setHeader('Content-Type', 'application/json');
-    response.send(searchResults);
+    response.render('all-recipe-page', {
+      recipes:searchResults,
+      layout:"header-body-footer"
+    })  
   });
 });
 
+router.get('api/v1/execute-favourite', function (request, response) {
+  request.url = '/api/v1/favourite';
+  request.method = 'PUT';
+
+  return router.handle(request, response);
+})
+
 //PUT request for setAsFavourite
-router.put('/api/v1/favourite', function (request, response) {
-  console.log("favourite");
+var setAsFavourite = function (request, response) {
   db.Recipe.find({
     where: {
       id:request.query.id
@@ -148,10 +197,14 @@ router.put('/api/v1/favourite', function (request, response) {
         }
       }
     ).then((recipe)=>{
+      // console.log(request.query.from);
+      // response.redirect(request.query.from);
+      response.setHeader('Content-Type', 'application/json');
       response.send(recipe);
     });
   });
-});
+}
+router.put('/api/v1/favourite', setAsFavourite);
 
 router.get('/api/v1/get-all-favourites', function (request, response) {
   db.Recipe.findAll({
@@ -168,3 +221,15 @@ router.get('/api/v1/add-new-recipe', function (request, response) {
   response.render('add-new-recipe', { 
   layout:"header-body-footer"});
 });
+
+router.get('/api/v1/edit-recipe-details', function (request, response) {
+  db.Recipe.findAll({
+    where:{
+      id:request.query.id
+    }
+  }).then((recipe)=>{
+    response.render('edit-recipe-form', {
+      recipe:recipe,
+      layout:"header-body-footer"});
+  })
+})
