@@ -12,11 +12,7 @@ module.exports = (sequelize, DataTypes) => {
         postDate:DataTypes.DATE,
         course:DataTypes.STRING,
         vegetarian:DataTypes.BOOLEAN
-    }, {
-
-        timestamps: false,
-
-        tableName: 'recipe', 
+    }, { 
         
         classMethods: {
             associate: (models) => {
