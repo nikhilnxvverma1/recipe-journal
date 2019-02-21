@@ -4,3 +4,29 @@ body {
 
 a {
   color: #00B7FF; }
+
+.recipe-item {
+  background-color: coral;
+  padding: 10;
+  display: inline-block;
+  text-decoration: none;
+  color: black; }
+
+.recipe-button-bar {
+  display: inline;
+  text-align: right; }
+
+.footer-div {
+  background-color: grey;
+  width: 100%;
+  height: 15%;
+  position: fixed;
+  bottom: 0; }
+
+.copyright-banner {
+  text-align: center;
+  vertical-align: bottom;
+  float: bottom; }
+
+.horizontal-form {
+  display: inline; }

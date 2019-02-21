@@ -124,7 +124,7 @@ router.get('/api/v1/search', function (request, response) {
   var favourite = false;
   var vegetarian = false;
 
-  var obj = "{ [Op.or]: {";
+  var obj = " [Op.or]: {";
 
   if(request.query.title !== "undefined" && request.query.title !== "")
     obj += "title : {[Op.like]:" + '%' + request.query.title + '%' + "}";
@@ -197,8 +197,6 @@ var setAsFavourite = function (request, response) {
         }
       }
     ).then((recipe)=>{
-      // console.log(request.query.from);
-      // response.redirect(request.query.from);
       response.setHeader('Content-Type', 'application/json');
       response.send(recipe);
     });
