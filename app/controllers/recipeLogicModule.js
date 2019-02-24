@@ -1,8 +1,4 @@
-RecipeLogicModule = function() {
-    
-}
-
-export function getAllRecipe (request, response) {
+module.exports = function getAllRecipe (request, response) {
     db.Recipe.findAll().then((recipes)=>{
   
       response.render('all-recipe-page', {
@@ -12,7 +8,7 @@ export function getAllRecipe (request, response) {
     });
 }
 
-export function getRecipe(request, response) {
+module.exports = function getRecipe(request, response) {
     db.Recipe.findAll({
       where:{
         id:request.query.id
@@ -25,7 +21,7 @@ export function getRecipe(request, response) {
     });
 }
 
-export  function addNewRecipe(request, response) {
+module.exports =  function addNewRecipe(request, response) {
     var favourite = false;
     var vegetarian = false;
     if(request.body.favourite !== "undefined" && request.body.favourite === "on")
@@ -50,7 +46,7 @@ export  function addNewRecipe(request, response) {
     });
 }
 
-export function editRecipe(request, response) {
+module.exports = function editRecipe(request, response) {
     var favourite = false;
     var vegetarian = false;
     if(request.body.favourite !== "undefined" && request.body.favourite === "on")
@@ -81,7 +77,7 @@ export function editRecipe(request, response) {
     });
 }
 
-export function deleteRecipe(request, response) {
+module.exports = function deleteRecipe(request, response) {
     db.Recipe.destroy({
       where: {
         id:request.query.id
@@ -95,7 +91,7 @@ export function deleteRecipe(request, response) {
     });
 }
 
-export function searchRecipe(request, response) {
+module.exports = function searchRecipe(request, response) {
 
     var title = "";
     var teaserText = "";
@@ -151,7 +147,7 @@ export function searchRecipe(request, response) {
     });
 }
 
-export function setAsFavourite(request, response) {
+module.exports = function setAsFavourite(request, response) {
     db.Recipe.find({
         where: {
         id:request.query.id
@@ -187,7 +183,7 @@ export function setAsFavourite(request, response) {
     });
 }
 
-export function getAllFavourites(request, response) {
+module.exports = function getAllFavourites(request, response) {
     db.Recipe.findAll({
       where: {
         favourite:1
@@ -197,5 +193,3 @@ export function getAllFavourites(request, response) {
       response.send(recipes);
     });
 }
-
-exports.RecipeLogicModule = RecipeLogicModule;
