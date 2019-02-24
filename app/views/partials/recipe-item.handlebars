@@ -6,10 +6,9 @@
         <div>
             <h3>{{this.title}}</h3>
             <a href="edit-recipe-details?id={{this.id}}"><img src="assets/edit.png"></a>
-            {{!-- <a href="favourite?id={{this.id}}"><img src="assets/edit.png"></a> --}}
             <form method="POST">
                 <input type="hidden" name="_method" value="PUT">
-                <input type="image" src="/assets/fav.png" alt="F" formaction="favourite?id={{this.id}}&_method=PUT">
+                <input type="image" src="/assets/fav.png" formaction="favourite?id={{this.id}}&fromId=1&_method=PUT">
             </form>
             <p>{{this.teaserText}}</p>
         </div>

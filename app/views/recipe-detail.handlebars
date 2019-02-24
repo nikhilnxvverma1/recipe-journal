@@ -5,7 +5,11 @@
         <h2>{{this.title}}</h2>
          <div class="recipe-button-bar">
             <a href="edit-recipe-details?id={{this.id}}"><img src="/assets/edit.png"/></a>
-            <a href="favourite?id={{this.id}}&from=get-recipe"><img src="/assets/fav.png"/></a>
+            <form method="POST">
+                <input type="hidden" name="_method" value="PUT">
+                <input type="image" src="/assets/fav.png" formaction="favourite?id={{this.id}}&fromId=2&_method=PUT">
+            </form>
+
         </div>
         <p>Preparation Time: {{this.preparationTime}}</p>
         <p>Cooking Time: {{this.cookingTime}}</p>
