@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../models');
-const recipeModule = require('../controllers/recipeLogicModule');
+const recipeModule = require('../recipeLogicModule');
 
 const Op = db.Sequelize.Op;
 
