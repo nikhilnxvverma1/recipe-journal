@@ -1,4 +1,6 @@
 const db = require('./models');
+const Op = db.Sequelize.Op;
+const Sequelize = db.Sequelize;
 
 module.exports = {
   getAllRecipe: (request, response) => {
@@ -75,7 +77,6 @@ module.exports = {
         }
       }
       ).then ((recipe)=> {
-        // response.send(recipe);
         response.redirect("get-all-recipe");
       });
   },
@@ -96,51 +97,42 @@ module.exports = {
 
   searchRecipe: (request, response) => {
 
-      var title = "";
-      var teaserText = "";
-      var favourite = false;
-      var vegetarian = false;
-    
-      var obj = " [Op.or]: {";
-    
-      if(request.query.title !== "undefined" && request.query.title !== "")
-        obj += "title : {[Op.like]:" + '%' + request.query.title + '%' + "}";
-    
-      if(request.query.teaserText !== "undefined" && request.query.teaserText !== "") {
-        obj += ",";
-        obj += "teaserText: {[Op.like]:" + '%' + request.query.teaserText + '%' + "}";
-      }
-    
-      if(request.query.cookingTime !== "undefined" && request.query.cookingTime !== "") {
-        obj += ",";
-        obj += "cookingTime: {[Op.lt]: " + request.query.cookingTime + "}";
-      }
-    
-      if(request.query.favourite !== "undefined" && request.query.favourite === "on") {
-        obj += ",";
-        obj += "favourite: true";
-      }
-    
-      if(request.query.preparationTime !== "undefined" && request.query.preparationTime !== "") {
-        obj += ",";
-        obj += "preparationTime: {[Op.lt]: " + request.query.preparationTime + "}";
-      }
-    
-      if(request.query.course !== "undefined" && request.query.course !== "") {
-        obj += ",";
-        obj += "course: " + request.query.course;
-      }
-    
-      if(request.query.vegetarian !== "undefined" && request.query.vegetarian === "on") {
-        obj += "vegetarian: true";
-      }
-    
-      obj+="}";
+    var favourite;
+    var vegetarian;
+    var title, teaserText, course;
+    if(request.query.favourite !== "undefined" && request.query.favourite === "on")
+      favourite = true;
+  
+    if(request.query.vegetarian !== "undefined" && request.query.vegetarian === "on")
+      vegetarian = true;
+
+    if(request.query.title !== "undefined" && request.query.title !== "")
+      title = '%' + request.query.title + '%';
       
-      var jsonClause = JSON.parse(obj);
-      db.Recipe.findAll({
+    if(request.query.teaserText !== "undefined" && request.query.teaserText !== "")
+      teaserText = '%' + request.query.teaserText;
+
+    if(request.query.course !== "undefined" && request.query.course !== "")
+      course = '%' + request.query.course + '%';
+    
+
+    db.Recipe.findAll({
         where: {
-          jsonClause
+          [Op.or]: [
+            Sequelize.where(Sequelize.fn('lower', Sequelize.col('title')), {
+              like : Sequelize.fn('lower', title),
+            }), 
+            Sequelize.where(Sequelize.fn('lower', Sequelize.col('teaserText')), {
+              like : Sequelize.fn('lower', teaserText),
+            }), 
+            {cookingTime:request.query.cookingTime},
+            {preparationTime:request.query.preparationTime},
+            Sequelize.where(Sequelize.fn('lower', Sequelize.col('course')), {
+              like : Sequelize.fn('lower', course),
+            }), 
+            {favourite:favourite},
+            {vegetarian:vegetarian}
+          ]
         }
       }).then ((searchResults)=> {
         response.render('all-recipe-page', {
