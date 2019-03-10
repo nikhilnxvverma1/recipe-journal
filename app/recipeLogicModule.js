@@ -160,18 +160,15 @@ module.exports = {
           ).then((recipe)=>{
           switch(request.query.fromId) {
               case "1": {
-              response.render('get-all-recipe', {
-                  layout:"header-body-footer"});
+              response.redirect('get-all-recipe');
               break;
               }
               case "2": {
-              response.render('get-recipe', {
-                  id: request.query.id,
-                  layout:"header-body-footer"});    
+              response.redirect('get-recipe?id=' + request.query.id);    
                   break;
               }
               default: {
-              response.render
+              
               }
           }
           });
